@@ -237,11 +237,14 @@ pub fn pango_context_get_for_screen(screen: &Screen) -> Option<pango::Context> {
     }
 }
 
-//pub fn pango_layout_get_clip_region(layout: /*Ignored*/&pango::Layout, x_origin: i32, y_origin: i32, index_ranges: i32, n_ranges: i32) -> Option<cairo::Region> {
-//    unsafe { TODO: call ffi::gdk_pango_layout_get_clip_region() }
-//}
+pub fn pango_layout_get_clip_region(layout: &pango::Layout, x_origin: i32, y_origin: i32, index_ranges: i32, n_ranges: i32) -> Option<cairo::Region> {
+    assert_initialized_main_thread!();
+    unsafe {
+        from_glib_full(ffi::gdk_pango_layout_get_clip_region(layout.to_glib_none().0, x_origin, y_origin, index_ranges, n_ranges))
+    }
+}
 
-//pub fn pango_layout_line_get_clip_region(line: /*Ignored*/&pango::LayoutLine, x_origin: i32, y_origin: i32, index_ranges: &[i32], n_ranges: i32) -> Option<cairo::Region> {
+//pub fn pango_layout_line_get_clip_region(line: &pango::LayoutLine, x_origin: i32, y_origin: i32, index_ranges: &[i32], n_ranges: i32) -> Option<cairo::Region> {
 //    unsafe { TODO: call ffi::gdk_pango_layout_line_get_clip_region() }
 //}
 

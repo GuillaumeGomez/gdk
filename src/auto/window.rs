@@ -168,8 +168,8 @@ pub trait WindowExt {
 
     fn get_accept_focus(&self) -> bool;
 
-    //#[cfg_attr(feature = "v3_22", deprecated)]
-    //fn get_background_pattern(&self) -> /*Ignored*/Option<cairo::Pattern>;
+    #[cfg_attr(feature = "v3_22", deprecated)]
+    fn get_background_pattern(&self) -> Option<cairo::Pattern>;
 
     fn get_children(&self) -> Vec<Window>;
 
@@ -333,8 +333,8 @@ pub trait WindowExt {
     //#[deprecated]
     //fn set_background(&self, color: /*Ignored*/&Color);
 
-    //#[cfg_attr(feature = "v3_22", deprecated)]
-    //fn set_background_pattern<'a, P: Into<Option<&'a /*Ignored*/cairo::Pattern>>>(&self, pattern: P);
+    #[cfg_attr(feature = "v3_22", deprecated)]
+    fn set_background_pattern<'a, P: Into<Option<&'a cairo::Pattern>>>(&self, pattern: P);
 
     #[cfg_attr(feature = "v3_22", deprecated)]
     fn set_background_rgba(&self, rgba: &RGBA);
@@ -645,9 +645,11 @@ impl<O: IsA<Window> + IsA<glib::object::Object>> WindowExt for O {
         }
     }
 
-    //fn get_background_pattern(&self) -> /*Ignored*/Option<cairo::Pattern> {
-    //    unsafe { TODO: call ffi::gdk_window_get_background_pattern() }
-    //}
+    fn get_background_pattern(&self) -> Option<cairo::Pattern> {
+        unsafe {
+            from_glib_none(ffi::gdk_window_get_background_pattern(self.to_glib_none().0))
+        }
+    }
 
     fn get_children(&self) -> Vec<Window> {
         unsafe {
@@ -1136,9 +1138,12 @@ impl<O: IsA<Window> + IsA<glib::object::Object>> WindowExt for O {
     //    unsafe { TODO: call ffi::gdk_window_set_background() }
     //}
 
-    //fn set_background_pattern<'a, P: Into<Option<&'a /*Ignored*/cairo::Pattern>>>(&self, pattern: P) {
-    //    unsafe { TODO: call ffi::gdk_window_set_background_pattern() }
-    //}
+    fn set_background_pattern<'a, P: Into<Option<&'a cairo::Pattern>>>(&self, pattern: P) {
+        let pattern = pattern.into();
+        unsafe {
+            ffi::gdk_window_set_background_pattern(self.to_glib_none().0, pattern.to_glib_none_mut().0);
+        }
+    }
 
     fn set_background_rgba(&self, rgba: &RGBA) {
         unsafe {

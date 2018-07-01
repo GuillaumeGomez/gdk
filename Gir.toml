@@ -85,12 +85,15 @@ manual = [
     "cairo.Content",
     "cairo.Context",
     "cairo.FontOptions",
+    "cairo.Pattern",
     "cairo.Region",
     "cairo.Surface",
     "GdkPixbuf.Pixbuf",
     "Gio.Icon",
     "GLib.Error",
     "Pango.Context",
+    "Pango.Layout",
+    "Pango.LayoutLine",
 ]
 
 [[object]]
